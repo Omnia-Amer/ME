@@ -1,6 +1,6 @@
 # Omnia Amer — Portfolio v2
 
-**Live:** <https://omnia-amer.vercel.app>
+**Live:** <https://omnia-amer.vercel.app> · **Mirror:** <https://omnia-amer.github.io/ME/>
 
 A ground-up redesign of [omnia-amer.github.io/portfolio](https://omnia-amer.github.io/portfolio/),
 rebuilt as a React application with real motion design. Dark theme only for now
@@ -49,13 +49,15 @@ npm run preview
 
 ## Deploy
 
-**Production is Vercel** — `vercel.json` (zero-config Vite, SPA rewrite), served at
-<https://omnia-amer.vercel.app>. The repo is connected to the Vercel project, so
-every push to `main` deploys automatically and PRs get preview URLs.
+Both targets auto-deploy on every push to `main`:
 
-`vite.config.ts` still reads a `VITE_BASE` env var, so the build also works on a
-sub-path host (e.g. GitHub Pages: `VITE_BASE=/<repo>/ npm run build`, then serve
-`dist/` with a `404.html` copy of `index.html` and a `.nojekyll` file).
+- **Vercel** (`vercel.json`) — <https://omnia-amer.vercel.app>. Connected to the
+  Vercel project; PRs also get preview URLs.
+- **GitHub Pages** (`.github/workflows/pages.yml`) — <https://omnia-amer.github.io/ME/>.
+  `VITE_BASE` comes from `actions/configure-pages`, so it tracks the repo name;
+  the workflow adds a `404.html` SPA fallback and `.nojekyll`.
+
+`vite.config.ts` reads `VITE_BASE` so one build serves any base path.
 
 ## Adding a component from 21st.dev
 
