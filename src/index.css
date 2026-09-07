@@ -145,6 +145,14 @@
   }
 }
 
+/* Failsafe — force entrance-animated elements visible if the timeline stalls */
+:root[data-reveal-failsafe] [data-reveal],
+:root[data-reveal-failsafe] [data-reveal-word],
+:root[data-reveal-failsafe] .case-body.cb-anim > * {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* ============================================================
    Case-study body — ported from the legacy site, re-skinned.
    Rendered via dangerouslySetInnerHTML inside .case-body.
@@ -267,6 +275,17 @@
 .case-body b {
   color: var(--color-ink);
   font-weight: 600;
+}
+
+/* scroll-reveal for the rendered case-study blocks (added only when motion is ready) */
+.case-body.cb-anim > * {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+}
+.case-body.cb-anim > .cb-in {
+  opacity: 1;
+  transform: none;
 }
 
 /* ---- screenshot lightbox ---- */

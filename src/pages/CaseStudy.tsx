@@ -5,6 +5,7 @@ import { Reveal } from '@/components/Reveal'
 import { Eyebrow } from '@/components/Eyebrow'
 import { ArrowUpRight } from '@/components/Button'
 import { Lightbox } from '@/components/Lightbox'
+import { useRevealChildren } from '@/components/useRevealChildren'
 import { cases } from '@/content/cases.generated'
 import { asset, withBaseHtml } from '@/lib/paths'
 
@@ -15,6 +16,7 @@ export function CaseStudy() {
   const idx = cases.findIndex((c) => c.id === id)
   const study = idx >= 0 ? cases[idx] : null
   const bodyHtml = useMemo(() => (study ? withBaseHtml(study.bodyHtml) : ''), [study])
+  useRevealChildren(ref, [id])
 
   if (!study) return <Navigate to="/work" replace />
 
@@ -27,9 +29,12 @@ export function CaseStudy() {
         <Reveal>
           <Link
             to="/work"
-            className="mb-8 inline-flex items-center gap-2 font-mono text-[12px] text-ink-faint transition-colors hover:text-ink"
+            className="group mb-8 inline-flex items-center gap-2 font-mono text-[12px] text-ink-faint transition-colors hover:text-ink"
           >
-            ← Back to all work
+            <span aria-hidden className="transition-transform duration-300 group-hover:-translate-x-0.5 rtl:rotate-180">
+              ←
+            </span>
+            Back to all work
           </Link>
         </Reveal>
 
@@ -69,7 +74,7 @@ export function CaseStudy() {
         </Reveal>
 
         <Reveal>
-          <dl className="my-8 grid grid-cols-2 gap-4 border-y border-line py-6 sm:grid-cols-4">
+          <dl className="my-8 grid grid-cols-2 gap-4 border-y border-line py-6 md:grid-cols-4">
             {study.meta.map((m) => (
               <div key={m.k}>
                 <dt className="mb-2 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">{m.k}</dt>

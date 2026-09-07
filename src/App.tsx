@@ -1,11 +1,12 @@
 import { lazy, Suspense } from 'react'
 import { HashRouter, Route, Routes, useLocation } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, MotionConfig } from 'framer-motion'
 import { LangProvider } from '@/i18n/LangProvider'
 import { Localize } from '@/i18n/Localize'
 import { MotionReadyProvider } from '@/lib/MotionReady'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
+import { ScrollProgress } from '@/components/ScrollProgress'
 import { Home } from '@/pages/Home'
 
 const Work = lazy(() => import('@/pages/Work').then((m) => ({ default: m.Work })))
@@ -45,19 +46,22 @@ export default function App() {
     <HashRouter>
       <LangProvider>
         <MotionReadyProvider>
-          <Localize>
-            <a
-              href="#main-content"
-              className="sr-only fixed left-3 top-3 z-[1000] rounded-md bg-ink px-4 py-2.5 font-mono text-[12px] text-bg focus:not-sr-only"
-            >
-              Skip to content
-            </a>
-            <div className="u-grain min-h-screen">
-              <Header />
-              <AnimatedRoutes />
-              <Footer />
-            </div>
-          </Localize>
+          <MotionConfig reducedMotion="user">
+            <Localize>
+              <a
+                href="#main-content"
+                className="sr-only fixed left-3 top-3 z-[1000] rounded-md bg-ink px-4 py-2.5 font-mono text-[12px] text-bg focus:not-sr-only"
+              >
+                Skip to content
+              </a>
+              <ScrollProgress />
+              <div className="u-grain min-h-screen">
+                <Header />
+                <AnimatedRoutes />
+                <Footer />
+              </div>
+            </Localize>
+          </MotionConfig>
         </MotionReadyProvider>
       </LangProvider>
     </HashRouter>

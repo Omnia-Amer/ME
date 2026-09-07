@@ -4,32 +4,76 @@ import { Page } from '@/components/Page'
 import { Reveal } from '@/components/Reveal'
 import { Eyebrow } from '@/components/Eyebrow'
 import { Button, ArrowUpRight } from '@/components/Button'
+import { HeroMosaic } from '@/components/HeroMosaic'
+import { CountUp } from '@/components/CountUp'
+import { AnimatedHeading } from '@/components/AnimatedHeading'
 import { hero, impact, homeCta, workGroups } from '@/content/site.generated'
-import { asset, hrefToPath } from '@/lib/paths'
+import { hrefToPath } from '@/lib/paths'
 import { easeOutExpo } from '@/lib/motion'
 import { useIsMotionReady } from '@/lib/MotionReady'
+import { useLang } from '@/i18n/LangProvider'
 import { Marquee } from '@/components/ui/marquee'
 
 function HeroHeading() {
-  const html = hero.headingHtml
-  const m = html.match(/^(.*?)<em>(.*?)<\/em>(.*)$/)
-  const [before, em, after] = m ? [m[1], m[2], m[3]] : [html, '', '']
+  const ready = useIsMotionReady()
+  const { t } = useLang()
+  const m = hero.headingHtml.match(/^(.*?)<em>(.*?)<\/em>(.*)$/)
+  const before = t((m ? m[1] : hero.headingHtml).trim())
+  const em = t((m ? m[2] : '').trim())
+  const after = t((m ? m[3] : '').trim())
+  const parts: { w: string; accent: boolean }[] = [
+    ...before.split(' ').filter(Boolean).map((w) => ({ w, accent: false })),
+    ...(em ? [{ w: em, accent: true }] : []),
+    ...after.split(' ').filter(Boolean).map((w) => ({ w, accent: false })),
+  ]
+  const cls = 'max-w-[16ch] text-[clamp(2.6rem,6.4vw,4.75rem)] font-medium leading-[1.04] tracking-[-0.02em] md:max-w-[20ch]'
+
+  if (!ready)
+    return (
+      <h1 className={cls} data-no-i18n>
+        {parts.map((p, i) => (
+          <span key={i} className={p.accent ? 'text-accent' : ''}>
+            {p.w}
+            {i < parts.length - 1 ? ' ' : ''}
+          </span>
+        ))}
+      </h1>
+    )
+
   return (
-    <h1 className="max-w-[16ch] text-[clamp(2.6rem,6.4vw,4.75rem)] font-medium leading-[1.04] tracking-[-0.02em] md:max-w-[20ch]">
-      {before}
-      <span className="text-accent">{em}</span>
-      {after}
-    </h1>
+    <motion.h1
+      className={cls}
+      data-no-i18n
+      initial="hidden"
+      animate="show"
+      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: 0.15 } } }}
+    >
+      {parts.map((p, i) => (
+        <span
+          key={i}
+          className="inline-flex overflow-hidden pb-[0.1em] align-bottom"
+          style={{ marginInlineEnd: i < parts.length - 1 ? '0.25em' : 0 }}
+        >
+          <motion.span
+            data-reveal-word=""
+            variants={{ hidden: { y: '115%' }, show: { y: 0, transition: { duration: 0.8, ease: easeOutExpo } } }}
+            className={`inline-block ${p.accent ? 'text-accent' : ''}`}
+          >
+            {p.w}
+          </motion.span>
+        </span>
+      ))}
+    </motion.h1>
   )
 }
 
-/** Above-the-fold entrance: fade+rise with a small per-item delay. */
 function In({ i = 0, children, className }: { i?: number; children: React.ReactNode; className?: string }) {
   const ready = useIsMotionReady()
   if (!ready) return <div className={className}>{children}</div>
   return (
     <motion.div
       className={className}
+      data-reveal=""
       initial={{ opacity: 0, y: 22 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: easeOutExpo, delay: 0.05 + i * 0.09 }}
@@ -77,30 +121,9 @@ export function Home() {
           </In>
         </div>
 
-        <Reveal className="mt-16 w-full max-w-[1200px]">
-          <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
-            {hero.mosaic.map((tile) => (
-              <Link
-                key={tile.href}
-                to={hrefToPath(tile.href)}
-                className="group relative mb-4 block break-inside-avoid overflow-hidden rounded-[22px] border border-line bg-surface-2 p-2"
-              >
-                <img
-                  src={asset(tile.src)}
-                  alt={tile.alt}
-                  width={tile.w}
-                  height={tile.h}
-                  loading="lazy"
-                  className="rounded-[14px] grayscale-[0.9] transition-all duration-500 group-hover:scale-[1.02] group-hover:grayscale-0"
-                />
-                <span className="absolute left-4 top-4 rounded-full border border-white/20 bg-black/50 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-white backdrop-blur">
-                  {tile.tag}
-                </span>
-                <span className="absolute inset-x-4 bottom-4 flex translate-y-2 items-center justify-center gap-2 rounded-full border border-white/20 bg-black/55 px-4 py-2.5 font-mono text-[12px] text-white opacity-0 backdrop-blur transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                  View case study <ArrowUpRight />
-                </span>
-              </Link>
-            ))}
+        <Reveal className="mt-16 w-full">
+          <div className="flex justify-center">
+            <HeroMosaic />
           </div>
         </Reveal>
       </section>
@@ -128,7 +151,7 @@ export function Home() {
           <div className="mb-12 max-w-2xl">
             <Reveal>
               <Eyebrow>{impact.eyebrow}</Eyebrow>
-              <h2 className="mt-4 text-[clamp(2rem,4.4vw,3rem)]">{impact.title}</h2>
+              <AnimatedHeading as="h2" text={impact.title} className="mt-4 text-[clamp(2rem,4.4vw,3rem)]" />
               <p className="mt-4 max-w-xl text-[1.03rem] text-ink-soft">{impact.body}</p>
             </Reveal>
           </div>
@@ -136,7 +159,10 @@ export function Home() {
             {impact.stats.map((st, i) => (
               <Reveal key={st.label} delay={i * 0.06} className="bg-surface">
                 <div className="p-8 text-center">
-                  <div className="font-display text-[clamp(1.9rem,4vw,2.6rem)] font-semibold">{st.num}</div>
+                  <CountUp
+                    value={st.num}
+                    className="block font-display text-[clamp(1.9rem,4vw,2.6rem)] font-semibold"
+                  />
                   <div className="mt-2 font-mono text-[11.5px] text-ink-faint">{st.label}</div>
                 </div>
               </Reveal>
@@ -148,7 +174,7 @@ export function Home() {
       <section className="border-t border-line py-28 text-center">
         <div className="u-wrap">
           <Reveal>
-            <h2 className="mx-auto max-w-3xl text-[clamp(2rem,5vw,3.4rem)]">{homeCta.title}</h2>
+            <AnimatedHeading as="h2" text={homeCta.title} className="mx-auto max-w-3xl text-[clamp(2rem,5vw,3.4rem)]" />
             <p className="mx-auto mt-6 max-w-xl text-[1.03rem] text-ink-soft">{homeCta.body}</p>
             <div className="mt-8 flex justify-center">
               <Button to="/contact" variant="solid">

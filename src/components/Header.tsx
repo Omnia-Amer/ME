@@ -48,19 +48,27 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
-          {NAV.map((n) => (
-            <NavLink
-              key={n.to}
-              to={n.to}
-              className={({ isActive }) =>
-                `rounded-full px-4 py-2 font-mono text-[12.5px] tracking-[0.03em] transition-colors ${
-                  isActive ? 'bg-ink/10 text-ink' : 'text-ink-soft hover:bg-ink/[0.06] hover:text-ink'
-                }`
-              }
-            >
-              {n.label}
-            </NavLink>
-          ))}
+          {NAV.map((n) => {
+            const active = loc.pathname === n.to || loc.pathname.startsWith(n.to + '/')
+            return (
+              <NavLink
+                key={n.to}
+                to={n.to}
+                className={`relative rounded-full px-4 py-2 font-mono text-[12.5px] tracking-[0.03em] transition-colors ${
+                  active ? 'text-ink' : 'text-ink-soft hover:text-ink'
+                }`}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="navpill"
+                    className="absolute inset-0 -z-10 rounded-full bg-ink/10"
+                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                  />
+                )}
+                {n.label}
+              </NavLink>
+            )
+          })}
         </nav>
 
         <div className="flex items-center gap-2.5">

@@ -66,6 +66,7 @@ export function Skills() {
                 return (
                   <motion.div
                     key={m.name}
+                    data-reveal=""
                     layout={ready}
                     initial={ready ? { opacity: 0, y: 12 } : false}
                     animate={{ opacity: 1, y: 0 }}
