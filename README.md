@@ -1,7 +1,10 @@
 # Omnia Amer — Portfolio v2
 
+**Live:** <https://omnia-amer.vercel.app>
+
 A ground-up redesign of [omnia-amer.github.io/portfolio](https://omnia-amer.github.io/portfolio/),
-rebuilt as a React application with real motion design.
+rebuilt as a React application with real motion design. Dark theme only for now
+(the light theme is built but the toggle is disabled).
 
 **Stack**
 
@@ -46,13 +49,12 @@ npm run preview
 
 ## Deploy
 
-Two targets are wired:
+**Production is Vercel** — `vercel.json` (zero-config Vite, SPA rewrite), served at
+<https://omnia-amer.vercel.app>. Connect this repo under the project's
+*Settings → Git* for push-to-deploy, or run `vercel --prod` from a logged-in CLI.
 
-- **GitHub Pages** — `.github/workflows/deploy.yml` builds with
-  `VITE_BASE=/portfolio-v2/` and publishes `dist/` (adds `404.html` + `.nojekyll`).
-  Enable Pages -> "GitHub Actions" in repo settings.
-- **Vercel** — `vercel.json` (zero-config Vite, SPA rewrite). Base stays `/`.
-
+`.github/workflows/deploy.yml` also builds for **GitHub Pages** with
+`VITE_BASE=/<repo>/` (adds `404.html` + `.nojekyll`) if you'd rather host there;
 `vite.config.ts` reads `VITE_BASE` so the same build serves both.
 
 ## Adding a component from 21st.dev
