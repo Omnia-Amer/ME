@@ -1,0 +1,368 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   Omnia Amer — Portfolio v2 design system
+   Dark-first editorial. Warm near-black ground, bone ink,
+   a single amber accent carried from the brand sparkle.
+   ============================================================ */
+
+@theme {
+  --font-display: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --color-bg: #0b0b0e;
+  --color-surface: #121216;
+  --color-surface-2: #17171d;
+  --color-surface-3: #1e1e25;
+  --color-line: rgba(255, 255, 255, 0.1);
+  --color-line-strong: rgba(255, 255, 255, 0.22);
+  --color-ink: #f4f1ea;
+  --color-ink-soft: rgba(244, 241, 234, 0.68);
+  --color-ink-faint: rgba(244, 241, 234, 0.52);
+  --color-accent: #e8b750;
+  --color-accent-ink: #1a1406;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-pill: 999px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  /* Light theme — opt-in via [data-theme="light"] */
+  :root[data-theme='light'] {
+    --color-bg: #f6f4ef;
+    --color-surface: #ffffff;
+    --color-surface-2: #f1eee7;
+    --color-surface-3: #e9e5db;
+    --color-line: rgba(15, 15, 20, 0.12);
+    --color-line-strong: rgba(15, 15, 20, 0.26);
+    --color-ink: #16150f;
+    --color-ink-soft: rgba(22, 21, 15, 0.72);
+    --color-ink-faint: rgba(22, 21, 15, 0.55);
+    --color-accent: #a9720c;
+    --color-accent-ink: #fff8e8;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+  html[data-theme='light'] {
+    color-scheme: light;
+  }
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    margin: 0;
+    text-wrap: balance;
+    letter-spacing: -0.015em;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  html[dir='rtl'] {
+    --font-display: 'IBM Plex Sans Arabic', 'Archivo', sans-serif;
+    --font-body: 'IBM Plex Sans Arabic', 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Sans Arabic', 'IBM Plex Mono', monospace;
+  }
+  html[dir='rtl'] .u-ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+}
+
+@layer utilities {
+  .u-wrap {
+    width: 100%;
+    margin: 0 auto;
+    padding-inline: clamp(1rem, 6vw, 8.4375rem);
+    max-width: 100rem;
+  }
+  .u-mono {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+  .u-grain::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ============================================================
+   Case-study body — ported from the legacy site, re-skinned.
+   Rendered via dangerouslySetInnerHTML inside .case-body.
+   ============================================================ */
+.case-body .cd-shot {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  margin-bottom: 16px;
+  max-width: 1040px;
+  background: var(--color-surface-2);
+}
+.case-body .cd-shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: zoom-in;
+}
+.case-body .cd-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+  max-width: 1040px;
+}
+.case-body .cd-trio {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+  max-width: 1040px;
+}
+.case-body .cd-pair .cd-shot,
+.case-body .cd-trio .cd-shot {
+  margin-bottom: 0;
+  max-width: none;
+}
+@media (max-width: 760px) {
+  .case-body .cd-trio {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .case-body .cd-pair,
+  .case-body .cd-trio {
+    grid-template-columns: 1fr;
+  }
+}
+.case-body .cd-video {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  margin: 0 0 16px;
+  max-width: 360px;
+}
+.case-body .cd-video video {
+  width: 100%;
+  display: block;
+  background: #000;
+}
+.case-body .cd-video-wrap {
+  margin: 28px 0 8px;
+}
+.case-body .cd-video-lbl,
+.case-body .cd-caption {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--color-ink-faint);
+}
+.case-body .cd-video-lbl {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+.case-body .cd-caption {
+  margin: 0 0 34px;
+  max-width: 900px;
+}
+.case-body .cd-copy {
+  max-width: 760px;
+  margin-top: 40px;
+}
+.case-body .cd-copy .lbl {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 30px 0 10px;
+}
+.case-body .cd-copy .lbl:first-child {
+  margin-top: 0;
+}
+.case-body .cd-copy p {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-size: 1.03rem;
+  line-height: 1.75;
+}
+.case-body .achievement {
+  max-width: 300px;
+  margin: 24px 0 0;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  background: var(--color-surface-2);
+}
+.case-body .achievement img {
+  border-radius: 8px;
+}
+.case-body .achievement-cap {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-ink-faint);
+  text-align: center;
+  margin-top: 8px;
+}
+.case-body b {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* ---- screenshot lightbox ---- */
+.lbx {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  background: rgba(6, 6, 8, 0.94);
+  backdrop-filter: blur(6px);
+}
+.lbx-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  flex: none;
+  border-bottom: 1px solid var(--color-line);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-ink-faint);
+}
+.lbx-spacer {
+  flex: 1;
+}
+.lbx-btn {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 50%;
+  background: none;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.lbx-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-accent);
+}
+.lbx-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.lbx-btn svg {
+  width: 18px;
+  height: 18px;
+}
+.lbx-stage {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 18px;
+}
+.lbx-stage img {
+  max-width: 100%;
+  height: auto;
+  width: auto;
+  border-radius: 8px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+.lbx-cap {
+  flex: none;
+  padding: 12px 18px 20px;
+  max-width: 860px;
+  margin: 0 auto;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--color-ink-soft);
+  text-align: center;
+}
+
+@theme inline {
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+  from {
+    transform: translateX(0);
+    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
