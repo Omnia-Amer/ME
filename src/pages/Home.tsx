@@ -105,14 +105,14 @@ export function Home() {
           </In>
           <In i={4} className="mt-6 flex flex-col items-center gap-3">
             <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-faint">{hero.trustLabel}</span>
-            <div className="flex flex-wrap justify-center gap-8 font-display text-[18px] text-ink-faint">
+            <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 font-display text-[18px]">
               {hero.trust.map((tr) => (
                 <a
                   key={tr.name}
                   href={tr.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition-all duration-200 hover:scale-110 hover:font-bold hover:text-ink"
+                  className="rounded-full border border-transparent px-4 py-1.5 text-ink-faint transition-colors duration-200 hover:border-accent hover:bg-accent hover:text-accent-ink"
                 >
                   {tr.name}
                 </a>
@@ -156,7 +156,11 @@ export function Home() {
             </Reveal>
           </div>
           <div className="grid gap-px overflow-hidden rounded-[22px] border border-line bg-line sm:grid-cols-2 md:grid-cols-4">
-            {impact.stats.map((st, i) => (
+            {impact.stats
+              // v2 correction: the legacy site undercounts — work shipped in
+              // Qatar, Saudi Arabia, the UAE (Optimum Vision) and Egypt (Clayton).
+              .map((st) => (st.label.startsWith('Countries') ? { ...st, num: '4' } : st))
+              .map((st, i) => (
               <Reveal key={st.label} delay={i * 0.06} className="bg-surface">
                 <div className="p-8 text-center">
                   <CountUp

@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Mark } from './Mark'
 import { Button } from './Button'
 import { useLang } from '@/i18n/LangProvider'
-import { useTheme } from '@/lib/useTheme'
 
 const NAV = [
   { to: '/work', label: 'Work' },
@@ -18,7 +17,6 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { t, lang, toggle: toggleLang } = useLang()
-  const { theme, toggle: toggleTheme } = useTheme()
   const loc = useLocation()
 
   useEffect(() => {
@@ -78,13 +76,6 @@ export function Header() {
             </Button>
           </div>
           <button
-            onClick={toggleTheme}
-            aria-label={t(theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme')}
-            className="grid size-9 place-items-center rounded-full border border-line-strong text-ink-soft transition-colors hover:border-accent hover:text-ink"
-          >
-            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-          </button>
-          <button
             onClick={toggleLang}
             aria-label={t('Switch language')}
             className="rounded-full border border-line-strong px-3 py-1.5 font-mono text-[12px] text-ink-soft transition-colors hover:border-accent hover:text-ink"
@@ -132,15 +123,3 @@ export function Header() {
     </header>
   )
 }
-
-const SunIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}>
-    <circle cx="12" cy="12" r="4" />
-    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-  </svg>
-)
-const MoonIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}>
-    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
-  </svg>
-)
