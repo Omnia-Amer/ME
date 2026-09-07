@@ -6,7 +6,7 @@ import { AnimatedHeading } from './AnimatedHeading'
 interface Props {
   eyebrow?: string
   title: string
-  body?: string
+  body?: ReactNode
   children?: ReactNode
   align?: 'start' | 'center'
 }

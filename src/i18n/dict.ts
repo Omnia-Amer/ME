@@ -42,6 +42,15 @@ export const SUPPLEMENT_AR: Record<string, string> = {
   'That route does not exist.': 'هذا المسار غير موجود.',
   'Go home': 'العودة للرئيسية',
   'Loading…': 'جارٍ التحميل…',
-  // section eyebrows added in v2
+  // section eyebrows / labels added in v2
   'Case study': 'دراسة حالة',
+  'See all 18 case studies': 'اطّلع على جميع دراسات الحالة الـ18',
+  // legacy dict still says "(07)" here — the 18th case shifted the count
+  'Featured Projects (08)': 'مشاريع مختارة (08)',
+  'Send message': 'إرسال الرسالة',
+  'Sending…': 'جارٍ الإرسال…',
+  'or message on WhatsApp': 'أو راسلني على واتساب',
+  'so I can reply here too': 'حتى أتمكّن من الرد هنا أيضًا',
+  "A few lines about the role or project, timeline, and anything you'd like me to know.":
+    'أسطر قليلة عن الوظيفة أو المشروع والجدول الزمني وأي شيء تودّ إخباري به.',
 }

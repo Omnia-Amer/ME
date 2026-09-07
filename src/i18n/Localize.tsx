@@ -5,6 +5,7 @@ import { useLang } from './LangProvider'
 import { norm, SUPPLEMENT_AR } from './dict'
 
 const originalText = new WeakMap<Text, string>()
+const originalAttr = new WeakMap<Element, Record<string, string>>()
 
 function buildDict(): Record<string, string> {
   return {
@@ -13,7 +14,27 @@ function buildDict(): Record<string, string> {
   }
 }
 
+function translateAttrs(root: HTMLElement, toAr: boolean, dict: Record<string, string>) {
+  root.querySelectorAll<HTMLElement>('[placeholder], [aria-label]').forEach((el) => {
+    if (el.closest('[data-no-i18n]')) return
+    let saved = originalAttr.get(el)
+    if (!saved) {
+      saved = {}
+      for (const a of ['placeholder', 'aria-label']) {
+        const v = el.getAttribute(a)
+        if (v != null) saved[a] = v
+      }
+      originalAttr.set(el, saved)
+    }
+    for (const [a, orig] of Object.entries(saved)) {
+      const target = toAr ? (dict[norm(orig)] ?? orig) : orig
+      if (el.getAttribute(a) !== target) el.setAttribute(a, target)
+    }
+  })
+}
+
 function translateTree(root: HTMLElement, toAr: boolean, dict: Record<string, string>) {
+  translateAttrs(root, toAr, dict)
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
       const p = node.parentElement
@@ -30,20 +51,15 @@ function translateTree(root: HTMLElement, toAr: boolean, dict: Record<string, st
     const text = node as Text
     if (!originalText.has(text)) originalText.set(text, text.nodeValue ?? '')
     const original = originalText.get(text)!
-    if (!toAr) {
-      if (text.nodeValue !== original) text.nodeValue = original
-      continue
-    }
-    const hit = dict[norm(original)]
-    const target = hit ?? original
+    const target = toAr ? (dict[norm(original)] ?? original) : original
     if (text.nodeValue !== target) text.nodeValue = target
   }
 }
 
 /**
- * Wraps the app and mirrors the legacy site's text-node translation:
- * every English string already keyed in /i18n-ar.js is swapped in place
- * when Arabic is active. A MutationObserver keeps route changes and
+ * Mirrors the legacy site's in-place text translation: any English string
+ * already keyed in /i18n-ar.js (plus the v2 supplement) is swapped when
+ * Arabic is active. A MutationObserver keeps lazily-mounted routes and
  * re-renders translated without a flash.
  */
 export function Localize({ children }: { children: ReactNode }) {
@@ -54,24 +70,34 @@ export function Localize({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {
     const root = ref.current
     if (!root) return
-    translateTree(root, lang === 'ar', buildDict())
+    const dict = buildDict()
+    const run = () => translateTree(root, lang === 'ar', dict)
+    run()
+    // catch route content that mounts a tick later (lazy routes / Suspense)
+    const raf = requestAnimationFrame(run)
+    const t1 = window.setTimeout(run, 80)
+    const t2 = window.setTimeout(run, 300)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.clearTimeout(t1)
+      window.clearTimeout(t2)
+    }
   }, [lang, ready, pathname])
 
   useEffect(() => {
     const root = ref.current
-    if (!root || lang !== 'ar' || !ready) return
-    const dict = buildDict()
+    if (!root || !ready) return
     let raf = 0
     const obs = new MutationObserver(() => {
       cancelAnimationFrame(raf)
-      raf = requestAnimationFrame(() => translateTree(root, true, dict))
+      raf = requestAnimationFrame(() => translateTree(root, lang === 'ar', buildDict()))
     })
     obs.observe(root, { childList: true, subtree: true, characterData: true })
     return () => {
       obs.disconnect()
       cancelAnimationFrame(raf)
     }
-  }, [lang, ready, pathname])
+  }, [lang, ready])
 
   return <div ref={ref}>{children}</div>
 }

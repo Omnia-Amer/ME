@@ -84,7 +84,11 @@ export function Contact() {
 
       <section className="border-t border-line py-16">
         <div className="u-wrap">
-          <SectionHead eyebrow={contact.formHead.eyebrow} title={contact.formHead.title} body={contact.formHead.body} />
+          <SectionHead
+            eyebrow={contact.formHead.eyebrow}
+            title={contact.formHead.title}
+            body={<FormHeadBody />}
+          />
           <Reveal>
             <form onSubmit={onSubmit} className="flex max-w-[640px] flex-col gap-[18px]">
               <input type="text" name="_honey" tabIndex={-1} autoComplete="off" aria-hidden className="absolute -left-[9999px]" />
@@ -177,6 +181,24 @@ export function Contact() {
         </div>
       </section>
     </Page>
+  )
+}
+
+function FormHeadBody() {
+  // Split at the email so the DOM translator matches the legacy AR key,
+  // which stops just before the address.
+  const full = contact.formHead.body
+  const at = full.indexOf(contact.email)
+  const before = at >= 0 ? full.slice(0, at) : full
+  const after = at >= 0 ? full.slice(at + contact.email.length) : ''
+  return (
+    <>
+      {before}
+      <a href={`mailto:${contact.email}`} className="border-b border-line-strong">
+        {contact.email}
+      </a>
+      {after}
+    </>
   )
 }
 
