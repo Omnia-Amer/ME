@@ -50,12 +50,12 @@ npm run preview
 ## Deploy
 
 **Production is Vercel** — `vercel.json` (zero-config Vite, SPA rewrite), served at
-<https://omnia-amer.vercel.app>. Connect this repo under the project's
-*Settings → Git* for push-to-deploy, or run `vercel --prod` from a logged-in CLI.
+<https://omnia-amer.vercel.app>. The repo is connected to the Vercel project, so
+every push to `main` deploys automatically and PRs get preview URLs.
 
-`.github/workflows/deploy.yml` also builds for **GitHub Pages** with
-`VITE_BASE=/<repo>/` (adds `404.html` + `.nojekyll`) if you'd rather host there;
-`vite.config.ts` reads `VITE_BASE` so the same build serves both.
+`vite.config.ts` still reads a `VITE_BASE` env var, so the build also works on a
+sub-path host (e.g. GitHub Pages: `VITE_BASE=/<repo>/ npm run build`, then serve
+`dist/` with a `404.html` copy of `index.html` and a `.nojekyll` file).
 
 ## Adding a component from 21st.dev
 
