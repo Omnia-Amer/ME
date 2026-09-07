@@ -105,17 +105,11 @@ export function Home() {
           </In>
           <In i={4} className="mt-6 flex flex-col items-center gap-3">
             <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-faint">{hero.trustLabel}</span>
-            <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 font-display text-[18px]">
+            <div className="flex flex-wrap justify-center gap-2.5">
               {hero.trust.map((tr) => (
-                <a
-                  key={tr.name}
-                  href={tr.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-full border border-transparent px-4 py-1.5 text-ink-faint transition-colors duration-200 hover:border-accent hover:bg-accent hover:text-accent-ink"
-                >
+                <Button key={tr.name} href={tr.url} variant="ghost" small>
                   {tr.name}
-                </a>
+                </Button>
               ))}
             </div>
           </In>
